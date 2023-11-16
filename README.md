@@ -1,0 +1,7 @@
+**Blockchain**
+
+Blockchain is a decentralized and distributed ledger technology that enables secure and transparent record-keeping of transactions across a network of computers. It consists of a chain of blocks, where each block contains a list of transactions. These blocks are linked together using cryptographic hashes, ensuring the integrity of the entire chain. One of the key features of blockchain is its decentralized nature, meaning no single entity has control over the entire network, enhancing security and trust. Blockchain technology is the foundation for various applications beyond cryptocurrencies, such as smart contracts, supply chain management, and decentralized finance (DeFi).
+
+**Solidity Contracts**
+
+Solidity is a programming language specifically designed for creating smart contracts on blockchain platforms, with Ethereum being one of the most prominent examples. Smart contracts are self-executing contracts with the terms of the agreement directly written into code. Solidity allows developers to write code for these smart contracts, defining the rules and logic that govern how the contract operates. Smart contracts can be used for a variety of applications, including token creation, decentralized applications (DApps), and automated agreements. Solidity code is compiled into bytecode and then deployed onto the Ethereum blockchain. It plays a crucial role in enabling the functionality of decentralized applications and the execution of trustless transactions on the blockchain.
