@@ -22,6 +22,7 @@ contract SimpleCrowdSale {
 
     event LogInvestment(address indexed investor, uint256 ammount);
     event LogTokenAssignment(address indexed investor, uint256 numTokens);
+    event Refund(address investor, uint256 value);
 
     constructor(
         uint256 _startTime,
@@ -63,14 +64,13 @@ contract SimpleCrowdSale {
             block.timestamp <= endTime;
     }
 
-    function calculateNumberOfTokens(uint _investment) internal view returns(uint256) {
+    function calculateNumberOfTokens(
+        uint _investment
+    ) internal view returns (uint256) {
         return _investment / weiTokenPrice;
     }
 
-    function assignTokens(
-        address _beneficiario,
-        uint256 _investment
-    ) internal {
+    function assignTokens(address _beneficiario, uint256 _investment) internal {
         uint256 _numberOfTokens = calculateNumberOfTokens(_investment);
         crowdSaleToken.mint(_beneficiario, _numberOfTokens);
     }
@@ -85,7 +85,37 @@ contract SimpleCrowdSale {
         emit LogInvestment(investor, investment);
     }
 
-    function finalize() public onlyOwner {}
+    function refund() public {
+        if (!isRefunding) revert();
 
-    function refund() public {}
+        address investor = msg.sender;
+        uint256 investment = investmentAmmountOf[investor];
+
+        if (investment == 0) revert();
+
+        investmentAmmountOf[investor] = 0;
+        investmentRefunded += investment;
+
+        emit Refund(msg.sender, investment);
+
+        if (!payable(investor).send(investment)) revert();
+    }
+
+    function finalize() public onlyOwner {
+        if (isFinalized) revert();
+
+        bool isCrowdsaleCompleted = block.timestamp > endTime;
+        bool isInvestementObjectiveInalcanzed = investmentReceived >
+            weiInvestementObjective;
+
+        if (isCrowdsaleCompleted) {
+            if (isInvestementObjectiveInalcanzed) {
+                crowdSaleToken.release();
+            } else {
+                isRefunding = true;
+            }
+        }
+
+        isFinalized = true;
+    }
 }
